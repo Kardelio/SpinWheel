@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinAndroid)
+    id("maven-publish")
 }
 
 android {
@@ -40,6 +41,28 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("SpinWheel") {
+            groupId = "com.kardelio"
+            artifactId = "spinwheel"
+            version = "0.1"
+            println("${buildDir}/outputs/aar/SpinWheel-release.aar")
+            artifact("${buildDir}/outputs/aar/SpinWheel-release.aar")
+        }
+    }
+    repositories {
+        maven {
+            name = "GithubPackages"
+            url = uri("https://maven.pkg.github.com/kardelio/spinwheel")
+            credentials {
+                username = System.getenv("GITHUB_SPINWHEEL_USERNAME")
+                password = System.getenv("GITHUB_SPINWHEEL_PASSWORD")
+            }
         }
     }
 }
